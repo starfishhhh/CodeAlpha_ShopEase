@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Products - ShopEase</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            ShopEase
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart 🛒</a>
+            <a href="login.html">Login</a>
+        </nav>
+
+    </header>
+
+
+    <!-- PRODUCTS SECTION -->
+```html
+<section class="products-page">
+
+    <div class="products-heading">
+
+        <p class="section-label">
+            ✦ EXPLORE OUR COLLECTION ✦
+        </p>
+
+        <h2>
+            Find Your Favorites
+        </h2>
+
+        <p class="products-subtitle">
+            Little things that make everyday life a little prettier ♡
+        </p>
+
+    </div>
+
+
+    <div id="all-products"
+         class="product-grid">
+
+    </div>
+
+</section>
+```
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 ShopEase. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/api.js"></script>
+
+<script>
+    async function loadProducts() {
+
+        const container = document.getElementById("all-products");
+
+        try {
+
+            console.log("API URL:", API_URL);
+
+            const response = await fetch(`${API_URL}/products`);
+
+            console.log("Response status:", response.status);
+
+            const products = await response.json();
+
+            console.log("Products received:", products);
+
+            container.innerHTML = "";
+
+            if (!Array.isArray(products)) {
+                container.innerHTML = "<p>API did not return an array.</p>";
+                return;
+            }
+
+            products.forEach(product => {
+
+                const card = document.createElement("div");
+
+                card.className = "product-card";
+
+                card.innerHTML = `
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                    >
+
+                    <div class="product-info">
+
+                        <h3>${product.name}</h3>
+
+                        <p class="product-category">
+                            ${product.category}
+                        </p>
+
+                        <p>${product.description}</p>
+
+                        <p class="product-price">
+                            ₹${product.price}
+                        </p>
+
+                        <a
+                            href="product.html?id=${product._id}"
+                            class="btn"
+                        >
+                            View Product
+                        </a>
+
+                    </div>
+                `;
+
+                container.appendChild(card);
+
+            });
+
+        } catch (error) {
+
+            console.log("ERROR:", error);
+
+            container.innerHTML =
+                "<p>Unable to load products.</p>";
+
+        }
+    }
+
+    loadProducts();
+</script>
+<script src="../js/navbar.js"></script>
+</body>
+
+</html>

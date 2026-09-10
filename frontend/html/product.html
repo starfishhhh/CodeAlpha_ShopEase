@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details - ShopEase</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            ShopEase
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="products.html">
+                Products
+            </a>
+
+            <a href="cart.html">
+                Cart 🛒
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- PRODUCT DETAILS -->
+
+    <section class="featured">
+
+        <div id="product-details">
+
+            Loading product...
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 ShopEase. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="../js/api.js"></script>
+
+    <script>
+
+        async function loadProduct() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const productId =
+                params.get("id");
+
+
+            if (!productId) {
+
+                document.getElementById(
+                    "product-details"
+                ).innerHTML =
+                    "<p>Product not found.</p>";
+
+                return;
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/products/${productId}`
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Product not found"
+                    );
+
+                }
+
+
+                const product =
+                    await response.json();
+
+
+                document.getElementById(
+                    "product-details"
+                ).innerHTML = `
+
+                    <div class="product-card">
+
+                        <img
+                            src="${product.image}"
+                            alt="${product.name}"
+                        >
+
+                        <div class="product-info">
+
+                            <h1>
+                                ${product.name}
+                            </h1>
+
+                            <p class="product-category">
+
+                                Category:
+                                ${product.category}
+
+                            </p>
+
+                            <p>
+                                ${product.description}
+                            </p>
+
+                            <p class="product-price">
+
+                                ₹${product.price}
+
+                            </p>
+
+                            <p>
+
+                                Available Stock:
+                                ${product.stock}
+
+                            </p>
+
+                            <button
+                                class="btn"
+                                onclick="addToCart('${product._id}')"
+                            >
+
+                                Add to Cart
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            catch (error) {
+
+                console.error(error);
+
+                document.getElementById(
+                    "product-details"
+                ).innerHTML =
+                    "<p>Unable to load product.</p>";
+
+            }
+
+        }
+
+
+        function addToCart(productId) {
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingProduct = cart.find(
+        item => item.productId === productId
+    );
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    } else {
+
+        cart.push({
+            productId: productId,
+            quantity: 1
+        });
+
+    }
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    alert("Product added to cart!");
+
+}
+
+
+        loadProduct();
+
+    </script>
+<script src="../js/navbar.js"></script>
+</body>
+
+</html>
