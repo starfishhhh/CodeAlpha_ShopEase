@@ -7,7 +7,7 @@ if (!token) {
     window.location.href = "login.html";
 
 }
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://codealpha-shopease1.onrender.com/api";
 
 async function loadCheckoutSummary() {
 
